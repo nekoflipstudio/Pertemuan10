@@ -1,0 +1,26 @@
+CARA PASANG (2 menit)
+1. Extract zip ini, COPY semua folder (app, routes, resources, database) ke root project -> pilih "Replace".
+2. HAPUS 3 file lama ini dari project lo (udah nggak dipakai, bikin bentrok):
+   - app/Http/Controllers/AdminProjectController.php
+   - app/Http/Controllers/ProjectController.php
+   - app/Models/Projects.php
+3. Di terminal project:
+   php artisan optimize:clear
+   php artisan serve
+4. Buka:
+   http://127.0.0.1:8000/admin           -> Dashboard
+   http://127.0.0.1:8000/admin/projects  -> Data Projects (tambah / edit / hapus + upload gambar)
+
+Catatan: migration TIDAK diubah, jadi data lo yang sekarang tetap aman. Gambar upload masuk ke public/uploads/projects (nggak perlu storage:link).
+
+GAMBAR PROJECT (tambahan)
+5. Copy juga folder public/images ke folder public project lo.
+6. Jalankan sekali:
+   php artisan db:seed --class=ProjectImageSeeder
+   (otomatis pasang gambar ke project yang gambarnya hilang; yang sudah punya gambar dilewati)
+
+GAMBAR (WAJIB biar kolom Image nggak kosong)
+- Folder "public" di zip ini juga di-copy ke root project (merge/replace).
+- Lalu jalanin SEKALI:
+  php artisan db:seed --class=ProjectImageSeeder
+  (Otomatis pasang gambar ke project yang belum punya gambar. Tidak menambah / menghapus data.)

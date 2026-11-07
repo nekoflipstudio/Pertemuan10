@@ -1,49 +1,72 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Mahasiswa</title>
+    <title>@yield('title', 'Data Mahasiswa')</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="bg-light d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-dark bg-primary shadow-sm mb-4">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-dark navbar-expand-lg bg-primary shadow-sm mb-4">
         <div class="container">
-            <a href="#" class="navbar-brand fw-bold">
-                Mahasiswa
+
+            <a href="{{ url('/') }}" class="navbar-brand fw-bold">
+                UNPAM - Profile Mahasiswa
             </a>
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a href="{{ url('/') }}" class="nav-link text-white">
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ url('/profile') }}" class="nav-link text-white">
+                            Profile
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ url('/about') }}" class="nav-link text-white">
+                            About
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <div class="container flex-grow-1">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-sm">
+    <!-- KONTEN HALAMAN -->
+    <main class="container flex-grow-1">
+        @yield('content')
+    </main>
 
-                    <div class="card-header bg-white text-center py-4">
-                        <img
-                            src="{{ asset('Gunawan.png') }}"
-                            alt="Foto Mahasiswa"
-                            class="rounded-circle img-thumbnail shadow-sm"
-                            style="max-width: 120px; height: 120px;"
-                        >
-                    </div>
+    <!-- FOOTER -->
+    <footer class="bg-white text-center py-3 mt-4 border-top">
+        <small class="text-muted">
+            © {{ date('Y') }} UNPAM - Profile Mahasiswa
+        </small>
+    </footer>
 
-                    <div class="card-body">
-                        <p><strong>Nama :</strong> {{ $mahasiswa['nama'] }}</p>
-                        <p><strong>NIM :</strong> {{ $mahasiswa['nim'] }}</p>
-                        <p><strong>Prodi :</strong> {{ $mahasiswa['prodi'] }}</p>
-                        <p><strong>Email :</strong> {{ $mahasiswa['email'] }}</p>
-                        <p><strong>Kampus :</strong> {{ $mahasiswa['kampus'] }}</p>
-                        <p><strong>Status :</strong> {{ $mahasiswa['status'] }}</p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
