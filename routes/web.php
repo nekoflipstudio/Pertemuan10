@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -24,9 +25,8 @@ Route::get('/contact', function () {
     return view('pages.contact');
 })->name('contact');
 
-// Proses form contact (jika diperlukan)
+// Proses form contact
 Route::post('/contact', function () {
-    // Logika simpan ke database atau kirim email
     return redirect()->route('contact')->with('success', 'Pesan berhasil dikirim!');
 })->name('contact.submit');
 
@@ -37,9 +37,17 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 
 // Halaman admin (harus login)
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+
+    // Dashboard admin
     Route::get('/', function () {
         return view('admin.home');
     })->name('dashboard');
 
+    // Cetak laporan PDF
+    Route::get('/projects/pdf', [AdminProjectController::class, 'cetakPdf'])
+        ->name('projects.pdf');
+
+    // CRUD projects
     Route::resource('projects', AdminProjectController::class);
+
 });

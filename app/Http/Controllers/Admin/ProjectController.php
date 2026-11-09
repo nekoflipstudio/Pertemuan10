@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProjectController extends Controller
 {
@@ -12,9 +13,18 @@ class ProjectController extends Controller
 
     public function index()
     {
-        $projects = Project::orderBy('id')->get();
+        $projects = Project::orderBy('id')->paginate(10);
 
         return view('admin.projects.index', compact('projects'));
+    }
+
+    public function cetakPdf()
+    {
+        $projects = Project::orderBy('id')->get();
+
+        $pdf = Pdf::loadView('admin.projects.pdf', compact('projects'));
+
+        return $pdf->download('laporan-project.pdf');
     }
 
     public function create()
@@ -49,7 +59,7 @@ class ProjectController extends Controller
             $this->deleteImage($project->image);
             $data['image'] = $this->uploadImage($request);
         } else {
-            unset($data['image']); // tidak upload baru = pakai gambar lama
+            unset($data['image']);
         }
 
         $project->update($data);
@@ -89,8 +99,12 @@ class ProjectController extends Controller
 
     private function deleteImage(?string $path): void
     {
-        // hanya hapus file hasil upload, bukan gambar bawaan seeder
-        if ($path && str_starts_with($path, self::IMAGE_DIR . '/') && file_exists(public_path($path))) {
+        // Hanya hapus file hasil upload, bukan gambar bawaan seeder
+        if (
+            $path &&
+            str_starts_with($path, self::IMAGE_DIR . '/') &&
+            file_exists(public_path($path))
+        ) {
             @unlink(public_path($path));
         }
     }

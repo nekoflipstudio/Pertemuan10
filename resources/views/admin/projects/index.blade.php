@@ -1,66 +1,99 @@
+
 @extends('admin.template')
 
-@section('title', 'Data Projects')
+@section('title', 'Data Project')
 
 @section('content')
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="mb-0">Data Projects</h3>
-    <a href="{{ route('admin.projects.create') }}" class="btn btn-primary">Tambah Project</a>
-</div>
+<div class="container-fluid">
 
-@if (session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Data Project</h3>
 
-<div class="card shadow-sm">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Image</th>
-                        <th>Title</th>
-                        <th>Teknologi</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($projects as $project)
+        <header class="d-flex justify-content-end gap-2">
+            <a href="{{ route('admin.projects.create') }}" class="btn btn-primary">
+                Tambah Project
+            </a>
+
+            <a href="{{ route('admin.projects.pdf') }}" class="btn btn-danger" target="_blank">
+                Cetak PDF
+            </a>
+        </header>
+    </div>
+
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+
+                    <thead class="table-dark">
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
-                                @if ($project->image)
-                                    <img src="{{ asset($project->image) }}" alt="{{ $project->title }}" class="thumb img-thumbnail">
-                                @endif
-                            </td>
-                            <td>{{ $project->title }}</td>
-                            <td>{{ $project->technology }}</td>
-                            <td>{{ $project->description }}</td>
-                            <td>{{ $project->status }}</td>
-                            <td>
-                                <a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <th>No</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Technology</th>
+                            <th>Status</th>
+                            <th width="180">Aksi</th>
+                        </tr>
+                    </thead>
 
-                                <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm('Yakin ingin menghapus project ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center text-muted">Belum ada data project.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    <tbody>
+                        @forelse($projects as $project)
+                            <tr>
+                                <td>{{ $loop->iteration + ($projects->currentPage() - 1) * $projects->perPage() }}</td>
+
+                                <td>{{ $project->title }}</td>
+
+                                <td>{{ $project->description }}</td>
+
+                                <td>{{ $project->technology }}</td>
+
+                                <td>{{ $project->status }}</td>
+
+                                <td>
+                                    <a href="{{ route('admin.projects.edit', $project->id) }}"
+                                       class="btn btn-sm btn-warning">
+                                        Edit
+                                    </a>
+
+                                    <form action="{{ route('admin.projects.destroy', $project->id) }}"
+                                          method="POST"
+                                          class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus project ini?')">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    Belum ada data project.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+
+                </table>
+            </div>
+
+            {{ $projects->links('pagination::bootstrap-5') }}
+
         </div>
     </div>
+
 </div>
 
 @endsection
